@@ -5,7 +5,6 @@ import 'package:price_scanner_app/blocs/item.bloc.dart';
 import 'package:price_scanner_app/models/product.dart';
 import 'package:price_scanner_app/setting.dart';
 import 'vendor/resize/resize.dart';
-import 'setting2.dart';
 
 class itemDetails extends StatefulWidget {
   ItemPageBloc bloc;
@@ -16,11 +15,9 @@ class itemDetails extends StatefulWidget {
 }
 
 class _itemDetailsState extends State<itemDetails> {
-  bool isDesktop(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 500;
+  bool isDesktop(BuildContext context) => MediaQuery.of(context).size.width >= 500;
 
-  bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < 500;
+  bool isMobile(BuildContext context) => MediaQuery.of(context).size.width < 500;
 
   Timer? timer;
   String barcode = "";
@@ -38,10 +35,10 @@ class _itemDetailsState extends State<itemDetails> {
         stream: widget.bloc.connectionStatus.stream,
         builder: (context, snapshot) {
           if (snapshot.data!) {
-            return RawKeyboardListener(
+            return KeyboardListener(
               focusNode: FocusNode(),
               autofocus: true,
-              onKey: (event) async {
+              onKeyEvent: (event) async {
                 if (event.logicalKey.keyLabel == "Enter") {
                   String tempBarcode = barcode;
                   barcode = "";
@@ -50,9 +47,7 @@ class _itemDetailsState extends State<itemDetails> {
                       itemView = true;
                     });
                     if (timer != null) timer!.cancel();
-                    timer = Timer(
-                        const Duration(
-                            seconds: 30), //the wanted duration for the timer
+                    timer = Timer(const Duration(seconds: 30), //the wanted duration for the timer
                         () {
                       setState(() {
                         itemView = false;
@@ -71,8 +66,7 @@ class _itemDetailsState extends State<itemDetails> {
                   backgroundColor: Colors.white,
                   toolbarHeight: 135,
                   leading: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.width * 0.04),
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
                     child: StreamBuilder(
                         stream: widget.bloc.preferences.stream,
                         builder: (context, snapshot) {
@@ -85,8 +79,7 @@ class _itemDetailsState extends State<itemDetails> {
                               //add invo log if no logo available
                               return const SizedBox();
                             } else {
-                              logo = logo.replaceFirst(
-                                  "data:image/jpg;base64,", "");
+                              logo = logo.replaceFirst("data:image/jpg;base64,", "");
                               return Image.memory(
                                 base64Decode(logo),
                               );
@@ -107,13 +100,8 @@ class _itemDetailsState extends State<itemDetails> {
                         stream: widget.bloc.preferences.stream,
                         builder: (context, snapshot) {
                           return Text(
-                            widget.bloc.preferences.value == null
-                                ? ""
-                                : widget.bloc.preferences.value!.name,
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 2, 59, 112),
-                                fontSize: 48,
-                                fontWeight: FontWeight.bold),
+                            widget.bloc.preferences.value == null ? "" : widget.bloc.preferences.value!.name,
+                            style: const TextStyle(color: Color.fromARGB(255, 2, 59, 112), fontSize: 48, fontWeight: FontWeight.bold),
                           );
                         }),
                   )),
@@ -174,8 +162,7 @@ class _itemDetailsState extends State<itemDetails> {
                         label: const Text('GO Back'),
                         backgroundColor: const Color.fromARGB(255, 3, 135, 124),
                         icon: const Icon(
-                          Icons
-                              .navigate_before, //arrow_back //arrow_back //navigate_before
+                          Icons.navigate_before, //arrow_back //arrow_back //navigate_before
                           size: 24.0,
                         ),
                         onPressed: () {
@@ -213,9 +200,14 @@ class _itemDetailsState extends State<itemDetails> {
 
     List<Widget> widgets = [];
     if (isDesktop(context)) {
-      widgets = [itemImage(product), itemDetails(product)];
+      widgets = [
+        itemImage(product),
+        itemDetails(product)
+      ];
     } else {
-      widgets = [itemDetails(product)];
+      widgets = [
+        itemDetails(product)
+      ];
     }
 
     return Row(
@@ -238,14 +230,12 @@ class _itemDetailsState extends State<itemDetails> {
       ),
     );
 
-    RegExp _base64 = RegExp(
-        r'^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{4})$');
+    RegExp _base64 = RegExp(r'^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{4})$');
     if (product.defaultImage != "") {
       if (_base64.hasMatch(product.defaultImage)) {
         temp = Card(
           elevation: 12,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           child: Padding(
             padding: const EdgeInsets.all(18.0),
             child: Image(
@@ -285,10 +275,7 @@ class _itemDetailsState extends State<itemDetails> {
             SizedBox(
               child: Text(
                 product.name,
-                style: TextStyle(
-                    fontSize: 70.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 70.sp, color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(
@@ -307,10 +294,7 @@ class _itemDetailsState extends State<itemDetails> {
                   ),
                   Text(
                     product.price.toString(),
-                    style: TextStyle(
-                        fontSize: 70.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 70.sp, color: Colors.white, fontWeight: FontWeight.bold),
                   )
                 ],
               ),
@@ -322,54 +306,54 @@ class _itemDetailsState extends State<itemDetails> {
   }
 
   Widget scanWidget() {
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.only(top: 120.0),
-      child: SizedBox(
-        height: 500,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 12.h,
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: 43.h),
-              height: 100.h,
-              child: Text(
-                "Scan here",
-                style: TextStyle(
-                  fontSize: 52.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 120.0),
+        child: SizedBox(
+          height: 500,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 12.h,
               ),
-            ),
-            SizedBox(
-              height: 32.h,
-            ),
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1.0,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Image(
-                    image: AssetImage('assets/BarcodeScanner.png'),
+              Container(
+                padding: EdgeInsets.only(bottom: 43.h),
+                height: 100.h,
+                child: Text(
+                  "Scan here",
+                  style: TextStyle(
+                    fontSize: 52.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 32.h,
-            ),
-            SizedBox(
-              width: 180,
-              height: 90,
-              child: Image(image: AssetImage('assets/arrow-down.png')),
-            ),
-          ],
+              SizedBox(
+                height: 32.h,
+              ),
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1.0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: const Image(
+                      image: AssetImage('assets/BarcodeScanner.png'),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 32.h,
+              ),
+              const SizedBox(
+                width: 180,
+                height: 90,
+                child: Image(image: AssetImage('assets/arrow-down.png')),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

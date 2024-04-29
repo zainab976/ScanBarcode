@@ -33,13 +33,17 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   // save();
+    // save();
     if (!GetIt.instance.isRegistered<NavigationService>()) {
-      GetIt.instance
-          .registerSingleton<NavigationService>(NavigationService(context));
+      GetIt.instance.registerSingleton<NavigationService>(NavigationService(context));
     }
 
     bloc = SettingsBlocPage();
+
+    // Call save method after the widget has been fully initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      save();
+    });
   }
 
   void _showPopUpMessage(BuildContext context, String message) {
@@ -62,15 +66,33 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  // save() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   if (bloc.deviceName.isNotEmpty && bloc.selectedIP.isNotEmpty) {
+  //     await bloc.setSystemVars();
+  //     bloc.goToItemPage();
+  //   } else {
+  //     _showPopUpMessage(context, 'Please enter device name');
+  //   }
+  // }
+
   save() async {
-    //final prefs = await SharedPreferences.getInstance();
-    if (bloc.deviceName.isNotEmpty) {
-      if (bloc.selectedIP.isNotEmpty) {
+    // Check if deviceName and selectedIP are not empty
+    if (bloc.deviceName.isNotEmpty && bloc.selectedIP.isNotEmpty) {
+      try {
+        // Perform any necessary operations with SharedPreferences
         await bloc.setSystemVars();
+
+        // Navigate to the next page or screen
         bloc.goToItemPage();
+      } catch (error) {
+        // Handle any errors that occur during setSystemVars()
+        print('Error setting system variables: $error');
+        _showPopUpMessage(context, 'An error occurred while saving. Please try again.');
       }
     } else {
-      _showPopUpMessage(context, 'Please enter device name');
+      // Show a pop-up message if deviceName or selectedIP is empty
+      _showPopUpMessage(context, 'Please enter device name and IP address.');
     }
   }
 
@@ -103,8 +125,7 @@ class _SettingPageState extends State<SettingPage> {
                   bloc.deviceName = txt;
                 },
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                   labelText: 'setting.deviceName'.tr(),
                   labelStyle: const TextStyle(
                     color: Colors.black,
@@ -187,17 +208,14 @@ class _SettingPageState extends State<SettingPage> {
                               child: Container(
                                 width: double.infinity,
                                 margin: const EdgeInsets.only(top: 5),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 40),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
                                 decoration: BoxDecoration(
                                   color: const Color.fromARGB(255, 204, 204, 204),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
                                   bloc.ipAddresses.value[index],
-                                  style: const TextStyle(
-                                      fontSize: 25,
-                                      color: Color.fromARGB(255, 0, 0, 0)),
+                                  style: const TextStyle(fontSize: 25, color: Color.fromARGB(255, 0, 0, 0)),
                                 ),
                               ),
                             );
@@ -259,9 +277,7 @@ class _SettingPageState extends State<SettingPage> {
               child: Container(
                 height: 300,
                 width: 400,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20))),
                 child: Column(children: [
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -270,8 +286,7 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Text(
                           'setting.enterCustomIP'.tr(),
-                          style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -289,16 +304,14 @@ class _SettingPageState extends State<SettingPage> {
                         //           filterText = value;
                         //         })),
                         Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 20),
+                      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20),
                       child: TextField(
                         onChanged: (txt) {
                           filterText = txt;
                         },
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16.0, horizontal: 16.0),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                           labelText: "IP",
                           labelStyle: const TextStyle(
                             color: Colors.black,
@@ -325,11 +338,7 @@ class _SettingPageState extends State<SettingPage> {
                   Container(
                     height: 85,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: const BoxDecoration(
-                        color: Color.fromRGBO(238, 238, 238, 0.484),
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20))),
+                    decoration: const BoxDecoration(color: Color.fromRGBO(238, 238, 238, 0.484), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
                     child: Row(
                       children: [
                         Expanded(
@@ -338,13 +347,8 @@ class _SettingPageState extends State<SettingPage> {
                           children: [
                             Container(
                                 width: 130,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1.w, color: Colors.blue),
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.blue),
+                                margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                                decoration: BoxDecoration(border: Border.all(width: 1.w, color: Colors.blue), borderRadius: BorderRadius.circular(15), color: Colors.blue),
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(15),
                                   splashColor: Colors.white.withOpacity(0.5),
@@ -358,11 +362,7 @@ class _SettingPageState extends State<SettingPage> {
                                         textAlign: TextAlign.center,
                                         'setting.cancel'.tr(),
                                         maxLines: 1,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            height: 1,
-                                            color: Colors.white),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, height: 1, color: Colors.white),
                                       ),
                                     )),
                                   ),
@@ -373,13 +373,11 @@ class _SettingPageState extends State<SettingPage> {
                             Container(
                                 width: 130,
                                 decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1.w, color: Colors.blue),
+                                  border: Border.all(width: 1.w, color: Colors.blue),
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.blue,
                                 ),
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 10),
+                                margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(15),
                                   splashColor: Colors.white.withOpacity(0.5),
@@ -393,11 +391,7 @@ class _SettingPageState extends State<SettingPage> {
                                         textAlign: TextAlign.center,
                                         'setting.connect'.tr(),
                                         // maxLines: 1,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            height: 1.3,
-                                            color: Colors.white),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, height: 1.3, color: Colors.white),
                                       ),
                                     )),
                                   ),

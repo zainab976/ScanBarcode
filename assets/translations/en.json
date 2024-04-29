@@ -1,3 +1,6 @@
 {
-    "Home": "Home"
-}
+    "setting.connect": "Connect",
+    "setting.connection": "Connection",
+    "setting.deviceName": "Device Name",
+    "setting.deviceList": "Device List"
+  }
