@@ -55,7 +55,7 @@ class _itemDetailsState extends State<itemDetails> {
                     if (timer != null) timer!.cancel();
                     timer = Timer(
                         const Duration(
-                            seconds: 30), //the wanted duration for the timer
+                            seconds: 10), //the wanted duration for the timer
                         () {
                       setState(() {
                         itemView = false;
@@ -325,14 +325,14 @@ Widget itemDetails(Product product) {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            ElevatedButton(
+           /* ElevatedButton(
               onPressed: () {
                 setState(() {
                   itemView = false;
                 });
               },
               child: Text('New Scan'),
-            ),
+            ),*/
           ],
         ),
       ),
