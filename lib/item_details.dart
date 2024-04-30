@@ -66,67 +66,70 @@ class _itemDetailsState extends State<itemDetails> {
                 }
               },
               child: Scaffold(
-                backgroundColor: const Color.fromARGB(255, 2, 59, 112),
-                appBar: AppBar(
-                  backgroundColor: Colors.white,
-                  toolbarHeight: 135,
-                  leading: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.width * 0.04),
-                    child: StreamBuilder(
-                        stream: widget.bloc.preferences.stream,
-                        builder: (context, snapshot) {
-                          if (widget.bloc.preferences.value == null) {
-                            return const SizedBox();
-                          }
-                          String logo = widget.bloc.preferences.value!.logo;
-                          try {
-                            if (logo == "") {
-                              //add invo log if no logo available
-                              return const SizedBox();
-                            } else {
-                              logo = logo.replaceFirst(
-                                  "data:image/jpg;base64,", "");
-                              return Image.memory(
-                                base64Decode(logo),
-                              );
-                            }
-                          } catch (e) {
-                            return const SizedBox();
-                          }
-                          // return Image.asset(
-                          //   'assets/fifa-world-cup-qatar.png',
-                          // );
-                        }),
-                  ),
-                  leadingWidth: 160,
-                  title: Center(
-                      child: Padding(
-                    padding: const EdgeInsets.only(left: 43.0),
-                    child: StreamBuilder(
-                        stream: widget.bloc.preferences.stream,
-                        builder: (context, snapshot) {
-                          return Text(
-                            widget.bloc.preferences.value == null
-                                ? ""
-                                : widget.bloc.preferences.value!.name,
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 2, 59, 112),
-                                fontSize: 48,
-                                fontWeight: FontWeight.bold),
-                          );
-                        }),
-                  )),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.all(21.0),
-                      child: Image.asset(
-                        'assets/invo_image.png',
-                        width: 160,
-                      ),
-                    ),
-                  ],
+  backgroundColor: const Color.fromARGB(255, 2, 59, 112),
+  appBar: AppBar(
+    backgroundColor: Colors.white,
+    toolbarHeight: 135,
+    leading: Padding(
+      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+      child: StreamBuilder(
+        stream: widget.bloc.preferences.stream,
+        builder: (context, snapshot) {
+          if (widget.bloc.preferences.value == null) {
+            return const SizedBox();
+          }
+          String logo = widget.bloc.preferences.value!.logo;
+          try {
+            if (logo == "") {
+              // add invo log if no logo available
+              return const SizedBox();
+            } else {
+              logo = logo.replaceFirst(
+                  /*"data:image/jpg;base64,"*/ "", "");
+              return Image.memory(
+                base64Decode(logo),
+              );
+            }
+          } catch (e) {
+            return const SizedBox();
+          }
+        },
+      ),
+    ),
+    leadingWidth: 160,
+    title: Center(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 43.0),
+        child: StreamBuilder(
+          stream: widget.bloc.preferences.stream,
+          builder: (context, snapshot) {
+            return Flexible(
+              child: Text(
+                widget.bloc.preferences.value == null
+                    ? ""
+                    : widget.bloc.preferences.value!.name,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 2, 59, 112),
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+    actions: [
+      Padding(
+        padding: const EdgeInsets.all(21.0),
+        child: Image.asset(
+          'assets/invo_image.png',
+          width: 160,
+        ),
+      ),
+    ],
+  ),
+
                 //        body: itemView ? itemWidget() : scanWidget(),
                 body: LayoutBuilder(
                   builder: (context, constraints) {
@@ -271,57 +274,59 @@ class _itemDetailsState extends State<itemDetails> {
   }
 
   Widget itemDetails(Product product) {
-    return Container(
-      width: 520,
-      color: Colors.blue[900], // const Color.fromARGB(255, 0, 63, 143),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 180.h,
+  return Container(
+    width: 520,
+    color: Colors.blue[900],
+    child: Padding(
+      padding: EdgeInsets.only(left: 32.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 180 * MediaQuery.of(context).size.height / 896,
+          ),
+          SizedBox(
+            child: Text(
+              product.name,
+              style: TextStyle(
+                fontSize: 70 * MediaQuery.of(context).size.height / 896,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(
-              child: Text(
-                product.name,
-                style: TextStyle(
-                    fontSize: 70.sp,
+          ),
+          SizedBox(
+            height: 75 * MediaQuery.of(context).size.height / 896,
+          ),
+          SizedBox(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "price",
+                  style: TextStyle(
+                    fontSize: 34 * MediaQuery.of(context).size.height / 896,
                     color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 75.h,
-            ),
-            SizedBox(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "price",
-                    style: TextStyle(
-                      fontSize: 34.sp,
-                      color: Colors.white,
-                    ),
                   ),
-                  Text(
-                    product.price.toString(),
-                    style: TextStyle(
-                        fontSize: 70.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
+                ),
+                Text(
+                  product.price.toString(),
+                  style: TextStyle(
+                    fontSize: 70 * MediaQuery.of(context).size.height / 896,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget scanWidget() {
+Widget scanWidget() {
   return Center(
     child: Padding(
       padding: const EdgeInsets.only(top: 120.0),
@@ -333,7 +338,6 @@ class _itemDetailsState extends State<itemDetails> {
               height: 12.h,
             ),
             Container(
-              padding: EdgeInsets.only(bottom: 43.h),
               height: 100.h,
               child: Text(
                 "Scan here",
