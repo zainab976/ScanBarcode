@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:price_scanner_app/blocs/base.bloc.dart';
 import 'package:price_scanner_app/blocs/property.dart';
@@ -50,6 +51,25 @@ class ItemPageBloc implements BlocBase {
       product = null;
     }
     return true;
+  }
+
+ String convertToCurrency(double num) {
+    if (preferences.value != null) {
+      String currencySymbol = preferences.value!.settings.currencySymbol;
+      int afterDecimal = preferences.value!.settings.afterDecimal;
+      return "$currencySymbol ${num.toStringAsFixed(afterDecimal)}";
+    } else {
+      return num.toString();
+    }
+  }
+
+ String convertToNumber(double num) {
+    if (preferences.value != null) {
+      int afterDecimal = preferences.value!.settings.afterDecimal;
+      return num.toStringAsFixed(afterDecimal);
+    } else {
+      return num.toString();
+    }
   }
 
   @override

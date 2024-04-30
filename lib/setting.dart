@@ -26,7 +26,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  SettingsBlocPage bloc = SettingsBlocPage();
+  late SettingsBlocPage bloc;
   bool _isArabic = false;
 
   @override
@@ -64,14 +64,10 @@ class _SettingPageState extends State<SettingPage> {
 
   save() async {
     //final prefs = await SharedPreferences.getInstance();
-    if (bloc.deviceName.isNotEmpty) {
-      if (bloc.selectedIP.isNotEmpty) {
+     if (bloc.selectedIP.isNotEmpty) {
         await bloc.setSystemVars();
         bloc.goToItemPage();
       }
-    } else {
-      _showPopUpMessage(context, 'Please enter device name');
-    }
   }
 
   @override
@@ -91,40 +87,6 @@ class _SettingPageState extends State<SettingPage> {
                 fontSize: 8.sp,
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              margin: const EdgeInsets.all(5.0),
-              child: TextField(
-                onChanged: (txt) {
-                  bloc.deviceName = txt;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 16.0),
-                  labelText: 'setting.deviceName'.tr(),
-                  labelStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                  ),
-                ),
               ),
             ),
             const SizedBox(
@@ -169,6 +131,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: StreamBuilder(
                     stream: bloc.ipAddresses.stream,
                     builder: (context, snapshot) {
+                      // Re Build The Widget when stream has new value
                       //  return DropdownTextField(
                       //    options: bloc.ipAddresses.value,
                       //    onSelect: (item) {

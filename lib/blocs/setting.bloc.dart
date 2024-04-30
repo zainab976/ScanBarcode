@@ -35,14 +35,14 @@ class SettingsBlocPage implements BlocBase {
   late String selectedIP = '';
 
   SettingsBlocPage() {
-    _load();
+     _load();
   }
 
   _load() async {
     if (!await _initSystem()) {
       getIpAddress();
       _getDeviceId();
-    }
+     }
   }
 
   ///return true if connection availbale
@@ -50,15 +50,14 @@ class SettingsBlocPage implements BlocBase {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('ipaddress')) {
       selectedIP = prefs.getString('ipaddress').toString();
-      if (prefs.containsKey('deviceName')) {
-        deviceName = prefs.getString('deviceName').toString();
+
         if (prefs.containsKey('deviceId')) {
           deviceId = prefs.getString('deviceId').toString();
           //   _goToHomePage();
           goToItemPage();
           return true;
         }
-      }
+      
     }
 
     return false;
@@ -99,9 +98,7 @@ class SettingsBlocPage implements BlocBase {
     if (selectedIP != '') {
       await prefs.setString('ipaddress', selectedIP);
     }
-    if (deviceName != '') {
-      await prefs.setString('deviceName', deviceName);
-    }
+    
     if (deviceId != '') {
       await prefs.setString('deviceId', deviceId);
     }
@@ -135,11 +132,6 @@ class SettingsBlocPage implements BlocBase {
       errMsg.sink("Not valid IP");
       return;
     }
-    if (deviceName.isEmpty || deviceName == '') {
-      errMsg.sink("please enter device name");
-      return;
-    }
-
     await setSystemVars();
     // _goToHomePage();
     goToItemPage();

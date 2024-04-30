@@ -53,17 +53,11 @@ class NavigationService {
   }
 
   // @override
-  // goBack(dynamic resault) {
-  //   Utilts.mainPageNavigationKey.currentState!.pop(resault);
-  //   Utilts.mainPageRouteStack.removeLast();
-  //   if (Utilts.mainPageRouteStack.isNotEmpty) {
-  //     if (Utilts.mainPageRouteStack.last == "") {
-  //       currentPage.sink("Home");
-  //     } else {
-  //       currentPage.sink(Utilts.mainPageRouteStack.last);
-  //     }
-  //   }
-  // }
+  goBack(dynamic resault)  {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop(resault);
+    }
+  }
 
   goToItemPage(ItemPageBloc bloc) async {
     if (mainPageRouteStack.isEmpty || mainPageRouteStack.last != "Home") {
