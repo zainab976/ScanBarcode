@@ -29,28 +29,27 @@ class NavigationService {
     );
   }
 
-  _pushPageAndBlock(dynamic page) async {
-    return await Navigator.of(context).pushAndRemoveUntil(
-      PageRouteBuilder(
-        pageBuilder: (ctx, animation, secAndimation) => page,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1, 0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
+_pushPageAndBlock(dynamic page) async {
+  return await Navigator.of(context).pushReplacement(
+    PageRouteBuilder(
+      pageBuilder: (ctx, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1, 0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
 
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 350),
-      ),
-      ModalRoute.withName('/'),
-    );
-  }
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 350),
+    ),
+  );
+}
 
   // @override
   goBack(dynamic resault)  {
