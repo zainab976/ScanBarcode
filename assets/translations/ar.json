@@ -1,3 +1,16 @@
 {
-    "Home": "صفحة البداية"
-}
+    "setting.connect": "الاتصال",
+    "setting.lang": "تغيير اللغة",
+    "setting.connection": "الاتصال",
+    "setting.deviceName": "اسم الجهاز",
+    "setting.deviceList": "قائمة الأجهزة",
+    "setting.enterCustomIP": " (ip) ادخل العنوان",
+    "setting.cancel": "إلغاء",
+    "No Connection": "لا يوجد اتصال",
+    "GO Back": "الرجوع",
+    "Item Not Found": "غير موجود",
+    "No Image": "لا توجد صورة",
+    "New Scan": "مسح جديد",
+    "Scan here": "امسح هنا",
+    "price": "السعر"
+  }

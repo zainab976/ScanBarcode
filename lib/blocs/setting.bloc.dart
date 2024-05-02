@@ -1,17 +1,3 @@
-/*import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:invo5_kds/blocs/home.bloc.dart';
-import 'package:invo5_kds/utils/navigation.service.dart';
-import 'package:invo_models/invo_models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get_it/get_it.dart';
-import 'dart:math';
-import 'package:ping_discover_network_forked/ping_discover_network_forked.dart';
-
-import 'base.bloc.dart';
-*/
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -21,10 +7,8 @@ import 'package:price_scanner_app/blocs/property.dart';
 import 'package:price_scanner_app/services/naviagation.service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
-import 'dart:math';
 
 import '../../vendor/network_analyzer.dart';
-import '../base.bloc.dart';
 
 class SettingsBlocPage implements BlocBase {
   Property<List<String>> ipAddresses = Property([]);
@@ -68,7 +52,9 @@ class SettingsBlocPage implements BlocBase {
       ipAddresses.value = [];
       int port = 5600;
       //List<String> addresses = ["192.168.1.2"];
-      List<String> addresses = ["10.2.2.2"];
+      List<String> addresses = [
+        "10.2.2.2"
+      ];
       for (var element in await NetworkInterface.list()) {
         for (var address in element.addresses) {
           addresses.add(address.address);
@@ -98,7 +84,7 @@ class SettingsBlocPage implements BlocBase {
     if (selectedIP != '') {
       await prefs.setString('ipaddress', selectedIP);
     }
-    
+
     if (deviceId != '') {
       await prefs.setString('deviceId', deviceId);
     }
@@ -121,9 +107,7 @@ class SettingsBlocPage implements BlocBase {
 //         .goToHomePage(HomeBlocPage(deviceId, selectedIP, deviceName));
 //   }
   goToItemPage() {
-    GetIt.instance
-        .get<NavigationService>()
-        .goToItemPage(ItemPageBloc(selectedIP, deviceId));
+    GetIt.instance.get<NavigationService>().goToItemPage(ItemPageBloc(selectedIP, deviceId));
   }
 
   void connect() async {

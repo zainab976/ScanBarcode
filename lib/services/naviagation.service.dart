@@ -3,7 +3,9 @@ import 'package:price_scanner_app/blocs/item.bloc.dart';
 import 'package:price_scanner_app/item_details.dart';
 
 class NavigationService {
-  List<String> mainPageRouteStack = ["Settings"];
+  List<String> mainPageRouteStack = [
+    "Settings"
+  ];
   BuildContext context;
   NavigationService(this.context);
 
@@ -16,8 +18,7 @@ class NavigationService {
           const end = Offset.zero;
           const curve = Curves.ease;
 
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),
@@ -61,6 +62,7 @@ _pushPageAndBlock(dynamic page) async {
   goToItemPage(ItemPageBloc bloc) async {
     if (mainPageRouteStack.isEmpty || mainPageRouteStack.last != "Home") {
       mainPageRouteStack.add("Home");
+      print('gohome');
       return await _pushPageAndBlock(itemDetails(
         bloc: bloc,
       ));
