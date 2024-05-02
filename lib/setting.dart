@@ -1,22 +1,9 @@
-//import 'package:flutter/material.dart';
-/*
-import 'package:get_it/get_it.dart';
-import 'package:invo5_kds/utils/navigation.service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:resize/resize.dart';
-import 'package:easy_localization/easy_localization.dart';
-import '../../blocs/setting.bloc.dart';
-import '../widget/dropdown.text.widget.dart';
-*/
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get_it/get_it.dart';
 import 'package:price_scanner_app/blocs/setting.bloc.dart';
 import 'package:price_scanner_app/services/naviagation.service.dart';
 import 'vendor/resize/resize.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../widgets/dropdown.text.widget.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -26,24 +13,21 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  SettingsBlocPage bloc = SettingsBlocPage();
+  late SettingsBlocPage bloc;
   bool _isArabic = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // save();
+
     if (!GetIt.instance.isRegistered<NavigationService>()) {
+      print("in");
       GetIt.instance.registerSingleton<NavigationService>(NavigationService(context));
     }
 
     bloc = SettingsBlocPage();
-
-    // Call save method after the widget has been fully initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      save();
-    });
+    bloc.getIpAddress();
   }
 
   void _showPopUpMessage(BuildContext context, String message) {
@@ -66,33 +50,10 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  // save() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   if (bloc.deviceName.isNotEmpty && bloc.selectedIP.isNotEmpty) {
-  //     await bloc.setSystemVars();
-  //     bloc.goToItemPage();
-  //   } else {
-  //     _showPopUpMessage(context, 'Please enter device name');
-  //   }
-  // }
-
   save() async {
-    // Check if deviceName and selectedIP are not empty
-    if (bloc.deviceName.isNotEmpty && bloc.selectedIP.isNotEmpty) {
-      try {
-        // Perform any necessary operations with SharedPreferences
-        await bloc.setSystemVars();
-
-        // Navigate to the next page or screen
-        bloc.goToItemPage();
-      } catch (error) {
-        // Handle any errors that occur during setSystemVars()
-        print('Error setting system variables: $error');
-        _showPopUpMessage(context, 'An error occurred while saving. Please try again.');
-      }
-    } else {
-      // Show a pop-up message if deviceName or selectedIP is empty
-      _showPopUpMessage(context, 'Please enter device name and IP address.');
+    if (bloc.selectedIP.isNotEmpty) {
+      await bloc.setSystemVars();
+      bloc.goToItemPage();
     }
   }
 
@@ -108,48 +69,37 @@ class _SettingPageState extends State<SettingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'setting.connection'.tr(),
-              style: TextStyle(
-                fontSize: 8.sp,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+              'setting.lang'.tr(),
+              style: TextStyle(fontSize: 20.sp, color: Colors.black, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
-              margin: const EdgeInsets.all(5.0),
-              child: TextField(
-                onChanged: (txt) {
-                  bloc.deviceName = txt;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-                  labelText: 'setting.deviceName'.tr(),
-                  labelStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                  ),
-                ),
-              ),
+            Switch(
+              value: _isArabic,
+              onChanged: (value) {
+                setState(() {
+                  _isArabic = value;
+                  print(_isArabic);
+                  context.setLocale(_isArabic ? const Locale('ar') : const Locale('en'));
+                });
+              },
             ),
-            const SizedBox(
-              height: 20,
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                    child: ElevatedButton(
+                  onPressed: () {
+                    bloc.connect();
+                  },
+                  child: const Text(
+                    'setting.connect',
+                    style: TextStyle(fontSize: 20),
+                  ).tr(),
+                )),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,13 +140,6 @@ class _SettingPageState extends State<SettingPage> {
                 child: StreamBuilder(
                     stream: bloc.ipAddresses.stream,
                     builder: (context, snapshot) {
-                      //  return DropdownTextField(
-                      //    options: bloc.ipAddresses.value,
-                      //    onSelect: (item) {
-                      //      //if (item != null)
-                      //      bloc.selectedIP = item;
-                      //    },
-                      //  );
                       return ListView.builder(
                           itemCount: bloc.ipAddresses.value.length,
                           itemBuilder: (context, index) {
@@ -232,31 +175,6 @@ class _SettingPageState extends State<SettingPage> {
                 );
               },
             ),
-            Switch(
-              value: _isArabic,
-              onChanged: (value) {
-                setState(() {
-                  _isArabic = value;
-                  context.locale = value ? const Locale('en') : const Locale('ar');
-                });
-              },
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                    child: ElevatedButton(
-                  onPressed: () {
-                    bloc.connect();
-                  },
-                  child: const Text(
-                    'setting.connect',
-                    style: TextStyle(fontSize: 20),
-                  ).tr(),
-                )),
-              ),
-            )
           ],
         ),
       ),
@@ -292,18 +210,7 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                   ),
                   Expanded(
-                    child:
-                        // Container(
-                        //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        //     //margin: const EdgeInsets.symmetric(vertical: 5),
-                        //     child: CustomTextField(
-                        //         hint: "IP",
-                        //         focus: true,
-                        //         keyboardType: TextInputType.number,
-                        //         callback: (value) {
-                        //           filterText = value;
-                        //         })),
-                        Container(
+                    child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20),
                       child: TextField(
                         onChanged: (txt) {

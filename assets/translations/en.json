@@ -1,6 +1,16 @@
 {
     "setting.connect": "Connect",
+    "setting.lang": "Change Language",
     "setting.connection": "Connection",
     "setting.deviceName": "Device Name",
-    "setting.deviceList": "Device List"
+    "setting.deviceList": "Device List",
+    "setting.enterCustomIP": "Enter Custom IP",
+    "setting.cancel": "Cancel",
+    "No Connection": "No Connection",
+    "GO Back": "Go Back",
+    "Item Not Found": "Item Not Found",
+    "No Image": "No Image",
+    "New Scan": "New Scan",
+    "Scan here:": "Scan here",
+    "price": "Price"
   }
