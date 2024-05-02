@@ -3,7 +3,9 @@ import 'package:price_scanner_app/blocs/item.bloc.dart';
 import 'package:price_scanner_app/item_details.dart';
 
 class NavigationService {
-  List<String> mainPageRouteStack = ["Settings"];
+  List<String> mainPageRouteStack = [
+    "Settings"
+  ];
   BuildContext context;
   NavigationService(this.context);
 
@@ -16,8 +18,7 @@ class NavigationService {
           const end = Offset.zero;
           const curve = Curves.ease;
 
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),
@@ -30,16 +31,15 @@ class NavigationService {
   }
 
   _pushPageAndBlock(dynamic page) async {
-    return await Navigator.of(context).pushAndRemoveUntil(
+    return await Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (ctx, animation, secAndimation) => page,
+        pageBuilder: (ctx, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1, 0);
           const end = Offset.zero;
           const curve = Curves.ease;
 
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),
@@ -48,26 +48,20 @@ class NavigationService {
         },
         transitionDuration: const Duration(milliseconds: 350),
       ),
-      ModalRoute.withName('/'),
     );
   }
 
   // @override
-  // goBack(dynamic resault) {
-  //   Utilts.mainPageNavigationKey.currentState!.pop(resault);
-  //   Utilts.mainPageRouteStack.removeLast();
-  //   if (Utilts.mainPageRouteStack.isNotEmpty) {
-  //     if (Utilts.mainPageRouteStack.last == "") {
-  //       currentPage.sink("Home");
-  //     } else {
-  //       currentPage.sink(Utilts.mainPageRouteStack.last);
-  //     }
-  //   }
-  // }
+  goBack(dynamic resault) {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop(resault);
+    }
+  }
 
   goToItemPage(ItemPageBloc bloc) async {
     if (mainPageRouteStack.isEmpty || mainPageRouteStack.last != "Home") {
       mainPageRouteStack.add("Home");
+      print('gohome');
       return await _pushPageAndBlock(itemDetails(
         bloc: bloc,
       ));
