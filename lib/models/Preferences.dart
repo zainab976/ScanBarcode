@@ -58,7 +58,9 @@ class Preferences {
         for (var element in json['aggregators']) {
           _aggregators.add(Aggregator.fromJson(element));
         }
-      } catch (e) {}
+      } catch (e) {
+        print(e);
+      }
     }
 
     PrintingOptions printingOptions = PrintingOptions(printReceiptOnPaid: true, printRecieptOnSent: true, printRecieptOnVoid: true, numberOfRecieptWhenPaid: 1, numberOfReceiptWhenSent: 1);

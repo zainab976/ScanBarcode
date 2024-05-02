@@ -39,10 +39,10 @@ class _itemDetailsState extends State<itemDetails> {
         stream: widget.bloc.connectionStatus.stream,
         builder: (context, snapshot) {
           if (snapshot.data!) {
-            return RawKeyboardListener(
+            return KeyboardListener(
               focusNode: FocusNode(),
               autofocus: true,
-              onKey: (event) async {
+              onKeyEvent: (event) async {
                 if (event.logicalKey.keyLabel == "Enter") {
                   String tempBarcode = barcode;
                   barcode = "";
@@ -109,7 +109,7 @@ class _itemDetailsState extends State<itemDetails> {
                                       child: Text(
                                         widget.bloc.preferences.value == null ? "" : widget.bloc.preferences.value!.name,
                                         style: TextStyle(
-                                          color: Color.fromARGB(255, 2, 59, 112),
+                                          color: const Color.fromARGB(255, 2, 59, 112),
                                           fontSize: MediaQuery.of(context).size.width * 0.05,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -322,7 +322,7 @@ class _itemDetailsState extends State<itemDetails> {
   Widget itemDetails(Product product) {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.only(left: 32.0),
+        padding: const EdgeInsets.only(left: 32.0),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Column(
@@ -337,7 +337,7 @@ class _itemDetailsState extends State<itemDetails> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8), // Adjust the height as needed
+              const SizedBox(height: 8), // Adjust the height as needed
               Text(
                 "price".tr(),
                 style: TextStyle(
