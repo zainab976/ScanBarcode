@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:price_scanner_app/blocs/setting.bloc.dart';
 import 'package:price_scanner_app/services/naviagation.service.dart';
 import 'vendor/resize/resize.dart';
+import 'dart:ui' as ui;
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -57,72 +58,79 @@ class _SettingPageState extends State<SettingPage> {
     }
   }
 
+  void changeLang(bool value) {}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(40.h),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          //mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'setting.lang'.tr(),
-              style: TextStyle(fontSize: 20.sp, color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Switch(
-              value: _isArabic,
-              onChanged: (value) {
-                setState(() {
-                  _isArabic = value;
-                  print(_isArabic);
-                  context.setLocale(_isArabic ? const Locale('ar') : const Locale('en'));
-                });
-              },
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                    child: ElevatedButton(
-                  onPressed: () {
-                    bloc.connect();
-                  },
-                  child: const Text(
-                    'setting.connect',
-                    style: TextStyle(fontSize: 20),
-                  ).tr(),
-                )),
+    return Directionality(
+      textDirection: _isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
+      child: Scaffold(
+        body: Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(40.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'setting.lang'.tr(),
+                style: TextStyle(fontSize: 20.sp, color: Colors.black, fontWeight: FontWeight.bold),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'setting.deviceList'.tr(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        //fontWeight: FontWeight.bold,
-                      ),
+              const SizedBox(
+                height: 20,
+              ),
+              Switch(
+                value: _isArabic,
+                onChanged: (value) async {
+                  // Perform the asynchronous work outside of setState
+                  await context.setLocale(value ? const Locale('ar') : const Locale('en'));
+
+                  // Then update the state synchronously inside setState
+                  setState(() {
+                    _isArabic = value;
+                    print(_isArabic);
+                  });
+                },
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        bloc.connect();
+                      },
+                      child: const Text(
+                        'setting.connect',
+                        style: TextStyle(fontSize: 20),
+                      ).tr(),
                     ),
-                    IconButton(
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'setting.deviceList'.tr(),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          //fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
                         iconSize: 30,
                         onPressed: () {
                           bloc.getIpAddress();
                         },
-                        icon: const Icon(Icons.refresh)),
-                  ],
-                ),
-                IconButton(
+                        icon: const Icon(Icons.refresh),
+                      ),
+                    ],
+                  ),
+                  IconButton(
                     iconSize: 30,
                     onPressed: () async {
                       String? customIp = await customIpDialog();
@@ -130,52 +138,56 @@ class _SettingPageState extends State<SettingPage> {
                         bloc.connectToCustom(customIp);
                       }
                     },
-                    icon: const Icon(Icons.add)),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                //  color: Colors.red,
-                height: 50.h,
-                child: StreamBuilder(
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  //  color: Colors.red,
+                  height: 50.h,
+                  child: StreamBuilder(
                     stream: bloc.ipAddresses.stream,
                     builder: (context, snapshot) {
                       return ListView.builder(
-                          itemCount: bloc.ipAddresses.value.length,
-                          itemBuilder: (context, index) {
-                            return TextButton(
-                              onPressed: () async {
-                                bloc.selectedIP = bloc.ipAddresses.value[index];
-                                bloc.connect();
-                              },
-                              child: Container(
-                                width: double.infinity,
-                                margin: const EdgeInsets.only(top: 5),
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 204, 204, 204),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  bloc.ipAddresses.value[index],
-                                  style: const TextStyle(fontSize: 25, color: Color.fromARGB(255, 0, 0, 0)),
-                                ),
+                        itemCount: bloc.ipAddresses.value.length,
+                        itemBuilder: (context, index) {
+                          return TextButton(
+                            onPressed: () async {
+                              bloc.selectedIP = bloc.ipAddresses.value[index];
+                              bloc.connect();
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(top: 5),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 204, 204, 204),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            );
-                          });
-                    }),
+                              child: Text(
+                                bloc.ipAddresses.value[index],
+                                style: const TextStyle(fontSize: 25, color: Color.fromARGB(255, 0, 0, 0)),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-            StreamBuilder(
-              stream: bloc.errMsg.stream,
-              initialData: "",
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return Container(
-                  child: Text(bloc.errMsg.value),
-                );
-              },
-            ),
-          ],
+              StreamBuilder(
+                stream: bloc.errMsg.stream,
+                initialData: "",
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  return Container(
+                    child: Text(bloc.errMsg.value),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
