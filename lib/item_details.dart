@@ -108,55 +108,55 @@ class _itemDetailsState extends State<itemDetails> {
                             child: StreamBuilder(
                               stream: widget.bloc.preferences.stream,
                               builder: (context, snapshot) {
-                                return Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        widget.bloc.preferences.value == null ? "" : widget.bloc.preferences.value!.name,
-                                        style: TextStyle(
-                                          color: Color.fromARGB(255, 2, 59, 112),
-                                          fontSize: MediaQuery.of(context).size.width * 0.05,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
+                            return Row(
+  children: [
+    Expanded(
+      child: Center(
+        child: Text(
+          widget.bloc.preferences.value == null ? "" : widget.bloc.preferences.value!.name,
+          style: TextStyle(
+            color: Color.fromARGB(255, 2, 59, 112),
+            fontSize: MediaQuery.of(context).size.width * 0.05,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+  ],
+);
                               },
                             ),
                           ),
                         ),
                         actions: [
+                         
+                    Padding(
+  padding: const EdgeInsets.all(0.0),
+  child: FloatingActionButton.extended(
+    label: const Text('').tr(),
+    backgroundColor: Colors.white,
+    elevation: 0, // Set elevation to 0 to remove the shadow
+    onPressed: () async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.remove("ipaddress");
+      prefs.remove("deviceId");
+      GetIt.instance.unregister<NavigationService>();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return const SettingPage();
+          },
+        ),
+      );
+    },
+  ),
+), 
                           Padding(
                             padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
                             child: Image.asset(
                               'assets/invo_image.png',
                               width: MediaQuery.of(context).size.width * 0.2,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: FloatingActionButton.extended(
-                              label: const Text('GO Back').tr(),
-                              backgroundColor: const Color.fromARGB(255, 3, 135, 124),
-                              icon: const Icon(
-                                Icons.navigate_before, //arrow_back //arrow_back //navigate_before
-                                size: 24.0,
-                              ),
-                              onPressed: () async {
-                                final prefs = await SharedPreferences.getInstance();
-                                prefs.remove("ipaddress");
-                                prefs.remove("deviceId");
-                                GetIt.instance.unregister<NavigationService>();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return const SettingPage();
-                                    },
-                                  ),
-                                );
-                              },
                             ),
                           ),
                         ],
@@ -380,7 +380,7 @@ class _itemDetailsState extends State<itemDetails> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 12.h,
+                        height: 22.h,
                       ),
                       Container(
                         // padding: EdgeInsets.only(bottom: 43.h),

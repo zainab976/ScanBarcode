@@ -14,7 +14,6 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   late SettingsBlocPage bloc;
-  late SettingsBlocPage bloc;
   bool _isArabic = false;
 
   @override
@@ -104,7 +103,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   children: [
