@@ -43,7 +43,7 @@ class NetworkAnalyzer {
         s.destroy();
         yield NetworkAddress(host, true);
       } catch (e) {
-        if (!(e is SocketException)) {
+        if (e is! SocketException) {
           rethrow;
         }
 
@@ -95,9 +95,7 @@ class NetworkAnalyzer {
       });
     }
 
-    Future.wait<Socket>(futures)
-        .then<void>((sockets) => out.close())
-        .catchError((dynamic e) => out.close());
+    Future.wait<Socket>(futures).then<void>((sockets) => out.close()).catchError((dynamic e) => out.close());
 
     return out.stream;
   }
@@ -117,5 +115,14 @@ class NetworkAnalyzer {
   // 111: Connection refused
   // 113: No route to host
   // <empty>: SocketException: Connection timed out
-  static final _errorCodes = [13, 49, 61, 64, 65, 101, 111, 113];
+  static final _errorCodes = [
+    13,
+    49,
+    61,
+    64,
+    65,
+    101,
+    111,
+    113
+  ];
 }
